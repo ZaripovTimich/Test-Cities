@@ -17,14 +17,14 @@ import javax.inject.Singleton
 object NetworkModule {
 
     @Provides
-    fun provideBaseUrl() : String = "https://wft-geo-db.p.rapidapi.com/v1/geo/"
+    fun provideBaseUrl(): String = "https://wft-geo-db.p.rapidapi.com/v1/geo/"
 
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
 
     @Provides
     @Singleton
-    fun provideRetrofit(BASE_URL: String) : Retrofit = Retrofit.Builder()
+    fun provideRetrofit(BASE_URL: String): Retrofit = Retrofit.Builder()
         .client(okHttpClient.build())
         .addConverterFactory(GsonConverterFactory.create())
         .baseUrl(BASE_URL)
@@ -32,10 +32,10 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit) : ApiService = retrofit.create(ApiService::class.java)
+    fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
 
     @Provides
     @Singleton
-    fun provideRemoteDataSource(apiService: ApiService) : RemoteDataSource =
+    fun provideRemoteDataSource(apiService: ApiService): RemoteDataSource =
         RemoteDataSource(apiService)
 }

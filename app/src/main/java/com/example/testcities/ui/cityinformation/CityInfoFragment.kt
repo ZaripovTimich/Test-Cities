@@ -40,7 +40,7 @@ class CityInfoFragment : Fragment(R.layout.city_info_fragment) {
                             hideLoading()
                             Toast.makeText(
                                 context,
-                                "Произошла ошибка! Повторите попытку позже",
+                                getText(R.string.error),
                                 Toast.LENGTH_LONG
                             ).show()
                         }

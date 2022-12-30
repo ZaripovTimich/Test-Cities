@@ -19,13 +19,14 @@ class CitiesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityViewHolder =
         CityViewHolder(
-            ItemCityBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            ItemCityBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false
+            ),
             onInteractionListener
         )
 
-    override fun onBindViewHolder(holder: CityViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CityViewHolder, position: Int) =
         holder.bind(list[position])
-    }
 
     override fun getItemCount(): Int = list.size
 
@@ -51,6 +52,7 @@ class CityViewHolder(
     private val binding: ItemCityBinding,
     private val onInteractionListener: OnInteractionListener
 ) : RecyclerView.ViewHolder(binding.root) {
+
     fun bind(item: City) {
         binding.tvCity.text = "${item.city}, ${item.country}"
         binding.itemCity.setOnClickListener {

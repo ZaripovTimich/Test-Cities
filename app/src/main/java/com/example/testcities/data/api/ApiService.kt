@@ -2,14 +2,15 @@ package com.example.testcities.data.api
 
 import com.example.testcities.data.models.CitiesResponse
 import com.example.testcities.data.models.CityInfoResponse
-import com.example.testcities.util.Constants.GET_CITIES_API
-import com.example.testcities.util.Constants.GET_INFO_CITY_BY_ID
-import com.example.testcities.util.Constants.ID
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
+
+private const val GET_CITIES_API = "cities"
+private const val GET_INFO_CITY_BY_ID = "cities/{id}"
+private const val ID = "id"
 
 interface ApiService {
 

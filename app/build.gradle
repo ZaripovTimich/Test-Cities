@@ -17,6 +17,9 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "KEY", "\"259163c4acmsh7daf2b00dd4e69ep1285e9jsnd444bd55d6d8\""
+        buildConfigField "String", "HOST", "\"wft-geo-db.p.rapidapi.com\""
     }
 
     buildFeatures {

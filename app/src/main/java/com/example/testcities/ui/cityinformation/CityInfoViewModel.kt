@@ -22,7 +22,6 @@ class CityInfoViewModel @Inject constructor(
         MutableStateFlow<NetworkResult<CityInfoResponse>>(NetworkResult.Loading())
     val stateCity: StateFlow<NetworkResult<CityInfoResponse>> = _cityMutable.asStateFlow()
 
-
     fun getInfoCity(id: Int) = viewModelScope.launch(Dispatchers.IO) {
         repository.getInfoCity(id).collect { result ->
             _cityMutable.value = result

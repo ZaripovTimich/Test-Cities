@@ -1,7 +1,6 @@
 package com.example.testcities.ui.listcities
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.os.bundleOf
@@ -18,11 +17,9 @@ import com.example.testcities.databinding.CitiesFragmentBinding
 import com.example.testcities.ui.cityinformation.CityInfoFragment
 import com.example.testcities.ui.listcities.adapter.CitiesAdapter
 import com.example.testcities.ui.listcities.adapter.OnInteractionListener
-import com.example.testcities.util.Constants.LIMIT_CITIES
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.withContext
+
+private const val LIMIT_CITIES = 10
 
 @AndroidEntryPoint
 class CitiesFragment : Fragment(R.layout.cities_fragment) {
@@ -68,11 +65,7 @@ class CitiesFragment : Fragment(R.layout.cities_fragment) {
                     is NetworkResult.Error -> {
                         hideLoading()
                         canLoad = true
-                        Toast.makeText(
-                            context,
-                            "Произошла ошибка! Повторите попытку позже",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        Toast.makeText(context, getText(R.string.error), Toast.LENGTH_LONG).show()
                     }
                     is NetworkResult.Loading -> {
                         showLoading()
@@ -92,23 +85,25 @@ class CitiesFragment : Fragment(R.layout.cities_fragment) {
     private fun onInitRecyclerView() {
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+
         binding.rvCities.apply {
             layoutManager = linearLayoutManager
             adapter = citiesAdapter
-        }
+            this.addOnScrollListener(
+                object : RecyclerView.OnScrollListener() {
+                    override fun onScrollStateChanged(
+                        recyclerView: RecyclerView,
+                        newState: Int
+                    ) {
+                        super.onScrollStateChanged(recyclerView, newState)
+                        val totalItemCount = citiesAdapter.itemCount - 1
+                        val currentLastVisible = linearLayoutManager.findLastVisibleItemPosition()
 
-        binding.rvCities.addOnScrollListener(
-            object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    super.onScrollStateChanged(recyclerView, newState)
-
-                    val totalItemCount = citiesAdapter.itemCount - 1
-                    val currentLastVisible = linearLayoutManager.findLastVisibleItemPosition()
-
-                    if (canLoad && currentLastVisible == totalItemCount) getData()
+                        if (canLoad && currentLastVisible == totalItemCount) getData()
+                    }
                 }
-            }
-        )
+            )
+        }
     }
 
     private fun showLoading() {
