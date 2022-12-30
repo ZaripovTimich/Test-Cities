@@ -2,8 +2,6 @@ package com.example.testcities.ui.listcities.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testcities.data.models.City
 import com.example.testcities.databinding.ItemCityBinding
@@ -14,7 +12,11 @@ interface OnInteractionListener {
 
 class CitiesAdapter(
     private val onInteractionListener: OnInteractionListener
-) : ListAdapter<City, CityViewHolder>(CityDiffCallback()) {
+) : RecyclerView.Adapter<CityViewHolder>() {
+
+    private var list = mutableListOf<City>()
+    private var baseList = list
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityViewHolder =
         CityViewHolder(
             ItemCityBinding.inflate(LayoutInflater.from(parent.context), parent, false),
@@ -22,7 +24,26 @@ class CitiesAdapter(
         )
 
     override fun onBindViewHolder(holder: CityViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(list[position])
+    }
+
+    override fun getItemCount(): Int = list.size
+
+    fun setData(data: List<City>) {
+        if (list.isNotEmpty()) list.clear()
+        list.addAll(data)
+        notifyDataSetChanged()
+    }
+
+    fun addData(data: List<City>) {
+        val oldSize = list.size
+        list.addAll(data)
+        notifyItemRangeChanged(oldSize, list.size)
+    }
+
+    fun findCity(city: String) {
+        list = baseList.filter { it.city.contains(city) }.toMutableList()
+        notifyDataSetChanged()
     }
 }
 
@@ -35,15 +56,5 @@ class CityViewHolder(
         binding.itemCity.setOnClickListener {
             onInteractionListener.onClickCity(item.id)
         }
-    }
-}
-
-class CityDiffCallback : DiffUtil.ItemCallback<City>() {
-    override fun areItemsTheSame(oldItem: City, newItem: City): Boolean {
-        return oldItem.id == newItem.id
-    }
-
-    override fun areContentsTheSame(oldItem: City, newItem: City): Boolean {
-        return oldItem == newItem
     }
 }

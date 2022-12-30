@@ -9,7 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,16 +18,13 @@ class CitiesViewModel @Inject constructor(
     private val repository: MainRepositoryImpl
 ) : ViewModel() {
 
-    private var _citiesMutable = MutableStateFlow<NetworkResult<CitiesResponse>>(NetworkResult.Loading())
-    val stateCities: StateFlow<NetworkResult<CitiesResponse>> = _citiesMutable
+    private var _citiesMutable =
+        MutableStateFlow<NetworkResult<CitiesResponse>>(NetworkResult.Loading())
+    val stateCities: StateFlow<NetworkResult<CitiesResponse>> = _citiesMutable.asStateFlow()
 
-//    init {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            repository.getCities().collect()
-//        }
-//    }
-
-    fun getCities() = viewModelScope.launch(Dispatchers.IO) {
-        repository.getCities().collect()
+    fun getCities(limit: Int, offset: Int) = viewModelScope.launch(Dispatchers.IO) {
+        repository.getCities(limit, offset).collect { result ->
+            _citiesMutable.value = result
+        }
     }
 }

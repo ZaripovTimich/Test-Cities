@@ -15,9 +15,9 @@ class MainRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource
 ) : BaseApiResponse() {
 
-    suspend fun getCities(): Flow<NetworkResult<CitiesResponse>> =
+    suspend fun getCities(limit: Int, offset: Int): Flow<NetworkResult<CitiesResponse>> =
         flow {
-            emit(safeApiCall { remoteDataSource.getCities() })
+            emit(safeApiCall { remoteDataSource.getCities(limit, offset) })
         }.flowOn(Dispatchers.IO)
 
     suspend fun getInfoCity(id: Int): Flow<NetworkResult<CityInfoResponse>> =

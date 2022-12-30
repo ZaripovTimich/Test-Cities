@@ -6,6 +6,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -17,9 +19,13 @@ object NetworkModule {
     @Provides
     fun provideBaseUrl() : String = "https://wft-geo-db.p.rapidapi.com/v1/geo/"
 
+    private val okHttpClient = OkHttpClient.Builder()
+        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+
     @Provides
     @Singleton
     fun provideRetrofit(BASE_URL: String) : Retrofit = Retrofit.Builder()
+        .client(okHttpClient.build())
         .addConverterFactory(GsonConverterFactory.create())
         .baseUrl(BASE_URL)
         .build()
